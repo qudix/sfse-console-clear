@@ -20,7 +20,7 @@ add_rules("mode.releasedbg", "mode.debug")
 add_rules("plugin.vsxmake.autoupdate")
 
 -- require package dependencies
-add_requires("commonlibsf")
+add_requires("commonlibsf 90bdcaf4f7b83fb275aa95005fb1b50c89431663")
 
 -- setup targets
 target("console-clear")
