@@ -8,7 +8,7 @@ Fixes the stubbed console clear command.
 
 ## Getting Started
 ```properties
-git clone https://github.com/Starfield-Reverse-Engineering/sfse-console-clear
+git clone https://github.com/Qudix/sfse-console-clear
 cd sfse-console-clear
 ```
 
