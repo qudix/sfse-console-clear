@@ -8,26 +8,19 @@ void ClearHistory_Thread(RE::Scaleform::Ptr<RE::IMenu> a_menu)
 bool ClearHistory(const RE::SCRIPT_PARAMETER*, const char*, RE::TESObjectREFR*, RE::TESObjectREFR*, RE::Script*, RE::ScriptLocals*, float*, std::uint32_t*)
 {
 	const auto ui = RE::UI::GetSingleton();
-	for (const auto menu : ui->menuStack) {
-		if (menu->menuName == "Console") {
-			std::thread(ClearHistory_Thread, menu).detach();
-			break;
-		}
-	}
+	if (const auto menu = ui->GetMenu(RE::Console::MENU_NAME))
+		std::thread(ClearHistory_Thread, menu).detach();
 
 	return true;
 }
 
-void OnMenu(RE::IMenu* a_menu)
+void OnMessage(SFSE::MessagingInterface::Message* a_msg)
 {
-	static bool hooked{ false };
-	if (a_menu->menuName == "Console" && !hooked) {
+	if (a_msg->type == SFSE::MessagingInterface::kPostDataLoad) {
 		if (auto command = RE::Script::LocateConsoleCommand("ClearConsole")) {
 			command->executeFunction = ClearHistory;
 
 			logs::info("hooked '{}' console command", command->shortName);
-
-			hooked = true;
 		}
 	}
 }
@@ -36,11 +29,8 @@ SFSEPluginLoad(const SFSE::LoadInterface* a_sfse)
 {
 	SFSE::Init(a_sfse);
 
-	const auto plugin = SFSE::PluginVersionData::GetSingleton();
-	logs::info("{} {}", plugin->GetPluginName(), plugin->GetPluginVersion());
-
-	if (const auto menu = SFSE::GetMenuInterface())
-		menu->Register(OnMenu);
+	if (const auto message = SFSE::GetMessagingInterface())
+		message->RegisterListener(OnMessage);
 
 	return true;
 }

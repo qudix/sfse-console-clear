@@ -1,36 +1,35 @@
 -- set minimum xmake version
 set_xmakever("2.8.2")
 
--- add custom package repository
-add_repositories("re https://github.com/Starfield-Reverse-Engineering/commonlibsf-xrepo")
+-- includes
+includes("lib/commonlibsf")
 
 -- set project
-set_project("console-clear")
+set_project("sfse-console-clear")
 set_version("0.1.0")
 set_license("GPL-3.0")
 
 -- set defaults
 set_languages("c++23")
-set_optimize("faster")
-set_warnings("allextra", "error")
+set_warnings("allextra")
 set_defaultmode("releasedbg")
 
 -- add rules
 add_rules("mode.releasedbg", "mode.debug")
 add_rules("plugin.vsxmake.autoupdate")
 
--- require package dependencies
-add_requires("commonlibsf 90bdcaf4f7b83fb275aa95005fb1b50c89431663")
+-- set policies
+set_policy("package.requires_lock", true)
 
 -- setup targets
-target("console-clear")
-    -- bind package dependencies
-    add_packages("commonlibsf")
+target("sfse-console-clear")
+    -- add dependencies to target
+    add_deps("commonlibsf")
 
     -- add commonlibsf plugin
-    add_rules("@commonlibsf/plugin", {
+    add_rules("commonlibsf.plugin", {
         name = "console-clear",
-        author = "Qudix",
+        author = "qudix",
         description = "Fixes the stubbed console clear command"
     })
 
