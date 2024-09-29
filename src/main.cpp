@@ -1,15 +1,12 @@
-void ClearHistory_Thread(RE::Scaleform::Ptr<RE::IMenu> a_menu)
-{
-	// UI thread tasks aren't available yet
-	std::this_thread::sleep_for(std::chrono::milliseconds(15));
-	a_menu->menuObj.Invoke("ClearHistory");
-}
-
 bool ClearHistory(const RE::SCRIPT_PARAMETER*, const char*, RE::TESObjectREFR*, RE::TESObjectREFR*, RE::Script*, RE::ScriptLocals*, float*, std::uint32_t*)
 {
 	const auto ui = RE::UI::GetSingleton();
 	if (const auto menu = ui->GetMenu(RE::Console::MENU_NAME))
-		std::thread(ClearHistory_Thread, menu).detach();
+		// UI thread tasks aren't available yet
+		std::thread([](RE::Scaleform::Ptr<RE::IMenu> a_menu) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(15));
+			a_menu->menuObj.Invoke("ClearHistory");
+		}, menu).detach();
 
 	return true;
 }
