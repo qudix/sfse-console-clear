@@ -1,7 +1,7 @@
 includes("lib/commonlibsf")
 
 set_project("sfse-console-clear")
-set_version("0.2.3")
+set_version("0.2.4")
 set_license("GPL-3.0")
 set_languages("c++23")
 set_warnings("allextra")
